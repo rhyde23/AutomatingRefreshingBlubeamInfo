@@ -9,6 +9,7 @@ from datetime import date
 #ldap3 - Library for connecting to AD
 from ldap3 import Connection
 
+#Function to prompt the user for desired settings
 def prompt_user() :
     workbook_path = input("Enter the file path of the excel workbook containing the Blubeam Computer data >> ")
     print()
