@@ -9,6 +9,8 @@ from datetime import date
 #pyad - Library for connecting to AD
 from pyad import *
 
+from getpass import getpass
+
 #Function to prompt the user for desired settings
 def prompt_user() :
 
@@ -48,7 +50,7 @@ def prompt_user() :
     print()
 
     #Prompt user for password
-    admin_passwd = input("Enter your admin password >> ")
+    admin_passwd = getpass(prompt="Enter your admin password >> ")
     print()
 
     #Call "identify_old_computers"
@@ -68,9 +70,8 @@ def identify_old_computers(max_days_old, workbook_path, last_ping_column_name, l
     #Connect to AD with pyad
     pyad.set_defaults(ldap_server= ldap_server, username=admin_user, password=admin_passwd)
 
-    #Print message
-    print("Here are the computers older than "+str(max_days_old)+" days old that are not in AD: ")
-    print()
+    #Make two empty lists for old computers in AD and old computers not in AD
+    in_ad, not_in_ad = [], []
 
     #Iterate through each column
     for column in sheet.iter_cols() :
@@ -108,11 +109,28 @@ def identify_old_computers(max_days_old, workbook_path, last_ping_column_name, l
                             #Search for device name in AD
                             try :
                                 computer_search = pyad.adcomputer.ADComputer.from_cn(cell.value)
+                                in_ad.append(cell.value)
 
                             #If not in AD, print device name
                             except :
                                 
                                 #Print the device name
-                                print(cell.value)
+                                not_in_ad.append(cell.value)
+
+    #Print message
+    print("Here are the computers older than "+str(max_days_old)+" days old that are not in AD: ")
+    print()
+
+    #Iterate through each computer name in "not_in_ad" and print it
+    for c in not_in_ad :
+        print(c)
+
+    #Print message
+    print("Here are the computers older than "+str(max_days_old)+" days old that are in AD: ")
+    print()
+
+    #Iterate through each computer name in "in_ad" and print it
+    for c in in_ad :
+        print(c)
 
 prompt_user()
