@@ -7,8 +7,9 @@ import openpyxl
 from datetime import date
 
 #pyad - Library for connecting to AD
-from pyad import *
+from pyad import pyad
 
+#getpass - Library for secret password entry user input
 from getpass import getpass
 
 #Function to prompt the user for desired settings
@@ -109,12 +110,14 @@ def identify_old_computers(max_days_old, workbook_path, last_ping_column_name, l
                             #Search for device name in AD
                             try :
                                 computer_search = pyad.adcomputer.ADComputer.from_cn(cell.value)
+
+                                #If in AD, add to in_ad
                                 in_ad.append(cell.value)
 
-                            #If not in AD, print device name
+                            #If not in AD
                             except :
                                 
-                                #Print the device name
+                                #Add to not_in_ad
                                 not_in_ad.append(cell.value)
 
     #Print message
